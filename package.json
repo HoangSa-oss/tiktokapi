@@ -15,7 +15,9 @@
     "bullcommentapi": "babel-node crawlapi/bullcomment.js",
     "commentreplyhtml": "babel-node crawlhtml/workcommentreply.js",
     "commenthtml": "babel-node crawlhtml/workcomment.js",
-    "bullcommenthtml": "babel-node crawlhtml/bullcomment.js"
+    "bullcommenthtml": "babel-node crawlhtml/bullcomment.js",
+    "user": "babel-node crawlapiauthor/workcomment.js",
+    "bulluser": "babel-node crawlapiauthor/bullcomment.js"
   },
   "keywords": [],
   "author": "",
@@ -38,13 +40,13 @@
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "mongodb": "^4.6.0",
     "mongoose": "^6.3.4",
     "nodemon": "^2.0.16",
     "playwright-chromium": "^1.37.1",
     "puppeteer": "^14.4.1",
-    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.1",
     "tiktok-signature": "^1.8.0"
   }

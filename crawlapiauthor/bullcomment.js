@@ -1,13 +1,77 @@
 import Queue from 'bull';
 
-const queueComment = new Queue('queueCommentCrawlApi','redis://127.0.0.1:6379')
+const queueComment = new Queue('queueUserCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
-      //////////////////////////////
-      "https://www.tiktok.com/@ivnqna05/video/7228169427613682950"
+  "https://www.tiktok.com/@giaohangtietkiem",
+  "https://www.tiktok.com/@ghn.official",
+  "https://www.tiktok.com/@tuyendung.ghnhanoi",
+  "https://www.tiktok.com/@myngoc0717",
+  "https://www.tiktok.com/@quang_shiper",
+  "https://www.tiktok.com/@andjkzb",
+  "https://www.tiktok.com/@kinhdoanhbaton",
+  "https://www.tiktok.com/@tui_shipper_ne",
+  "https://www.tiktok.com/@tech.ghn",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@giaohangtietkiem",
+  "https://www.tiktok.com/@ghtk_c2c",
+  "https://www.tiktok.com/@nguoi_ghtk",
+  "https://www.tiktok.com/@tuyendung_ghtkmienbac",
+  "https://www.tiktok.com/@genzsaleghtk",
+  "https://www.tiktok.com/@hotrotaotaikhoan.ghtk",
+  "https://www.tiktok.com/@33333lliott",
+  "https://www.tiktok.com/@tuyendungxteamhn",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@jntexpressvn",
+  "https://www.tiktok.com/@jnt.kvnamtrungbo",
+  "https://www.tiktok.com/@jthanoi.office",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@jnt.kvnamtrungbo",
+  "https://www.tiktok.com/@jntexpressbacninh",
+  "https://www.tiktok.com/@jt.hcm",
+  "https://www.tiktok.com/@tuyendungjtexpressvn",
+  "https://www.tiktok.com/@jnthanoi",
+  "https://www.tiktok.com/@moitinhsonggio",
+  "https://www.tiktok.com/@hieu_spx_50h14053",
+  "https://www.tiktok.com/@tuyendung.spx.vn",
+  "https://www.tiktok.com/@hungpt.19",
+  "https://www.tiktok.com/@shopeexpress.com",
+  "https://www.tiktok.com/@tuyendungspx",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@bestexpress_vietnam",
+  "https://www.tiktok.com/@bestexpress2905",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@bestexpressgodauha",
+  "https://www.tiktok.com/@phatcuong102",
+  "https://www.tiktok.com/@btdday00",
+  "https://www.tiktok.com/@halinh77677777",
+  "https://www.tiktok.com/@best_express88",
+  "https://www.tiktok.com/@best.express_bmt",
+  "https://www.tiktok.com/@bestexpress7",
+  "https://www.tiktok.com/@viettelpost.official",
+  "https://www.tiktok.com/@viettelpostbte",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@viettelpost.service",
+  "https://www.tiktok.com/@viettelpostofficial",
+  "https://www.tiktok.com/@viettelpostvungtau",
+  "https://www.tiktok.com/@viettelpostcantho",
+  "https://www.tiktok.com/@viettelpostdanang43",
+  "https://www.tiktok.com/@buutaviettelpost",
+  "https://www.tiktok.com/@chuyennhaviettelpost123",
+  "https://www.tiktok.com/@viettelpost.bgg",
+  "https://www.tiktok.com/@viettelpostankhanh",
+  "https://www.tiktok.com/@viettelpostbackan",
+  "https://www.tiktok.com/@bdvn.vietnampost",
+  "https://www.tiktok.com/@bdst.vnpost",
+  "https://www.tiktok.com/@vietnampostlogistics",
+  "https://www.tiktok.com/@ecomchannel",
+  "https://www.tiktok.com/@buudiennamdinh",
+  "https://www.tiktok.com/@vietnampostgiaohanggiare",
+  "https://www.tiktok.com/@gocbucxuc",
+  "https://www.tiktok.com/@buudienvietnam",
 ]
 for(let i=0;i<urlVdideo.length;i++){
-    queueComment.add({urlVideo:`${urlVdideo[i]}`})
+    queueComment.add({author:`${urlVdideo[i]}`})
 }
 
 // await queueComment.obliterate({ force: true });

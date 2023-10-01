@@ -5,9 +5,8 @@ const {Schema,model} = mongoose;
 
 mongoose.connect(mongo_info.name_colection);
 const profileSchema = new Schema({
-    vid:String,
-    cid:String,
-    text:String,
-    reply_comment_total:Number
+    urlPost:String,
+    author:String,
+    date:Number
 }, { versionKey: false })
-export default model('comment',profileSchema);
+export default model('uservideo',profileSchema);

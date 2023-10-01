@@ -4,17 +4,26 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import Queue from 'bull';
 import schemacomment from './schema/schemacomment.js';
-const queueComment = new Queue('queueCommentCrawlApi','redis://127.0.0.1:6379')
 import delay from 'delay'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import  {executablePath} from 'puppeteer'
-import cookie from "./cookiedefault.json" assert { type: 'json' }
-
+import {createCipheriv } from 'crypto'
+import moment from 'moment';
+import fs from 'fs/promises'
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const date = '2023-09-01'
+const dateTimeStamp = moment(date).format('X')
+const TT_REQ_PERM_URL =
+  "https://www.tiktok.com/api/post/item_list/?aid=1988&app_language=en&app_name=tiktok_web&battery_info=1&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F107.0.0.0%20Safari%2F537.36%20Edg%2F107.0.1418.56&channel=tiktok_web&cookie_enabled=true&device_id=7165118680723998214&device_platform=web_pc&focus_state=true&from_page=user&history_len=3&is_fullscreen=false&is_page_visible=true&os=windows&priority_region=RO&referer=&region=RO&screen_height=1440&screen_width=2560&tz_name=Europe%2FBucharest&webcast_language=en&msToken=G3C-3f8JVeDj9OTvvxfaJ_NppXWzVflwP1dOclpUOmAv4WmejB8kFwndJufXBBrXbeWNqzJgL8iF5zn33da-ZlDihRoWRjh_TDSuAgqSGAu1-4u2YlvCATAM2jl2J1dwNPf0_fk9dx1gJxQ21S0=&X-Bogus=DFSzswVYxTUANS/JS8OTqsXyYJUo&_signature=_02B4Z6wo00001CoOkNwAAIDBCa--cQz5e0wqDpRAAGoE8f";
+
 const  tiktokProfile = async()=>{
+    const queueComment = new Queue('queueUserCrawlApi','redis://127.0.0.1:6379')
+  
     queueComment.process(1,async (job,done)=>{
+        try {
+              await delay(1000)
         const browser = await puppeteer.launch({
             headless: false,
             // userDataDir: '/Users/hoangsa/Library/Application Support/Google/Chrome/Profile 3',
@@ -31,122 +40,182 @@ const  tiktokProfile = async()=>{
                 ignoreHTTPSErrors: true,
                 executablePath:executablePath(),  
         });
+        await delay(1000)
         const page = await browser.newPage({});
-        await page.setCookie(...cookie[1][4])
-
+        let urlRes = ''
+        page.on('request',(req)=>{
+            if(req.url().includes("https://www.tiktok.com/api/user/detail")){
+                urlRes = req.url()
+            }
+        })
         await page.setBypassCSP(true)
-        await page.goto("https://www.tiktok.com",{
-        })
-        await delay(3000)
-        page.goto(job.data.urlVideo,{
-        })
-        const urlRes = await page.waitForRequest(req=>{
-            return req.url().includes("https://www.tiktok.com/api/comment/list")
-        })
-        await page.waitForNavigation({
-        });
-        const msToken = urlRes.url().split('&')[32].slice(8,1000000000000)
-        let LOAD_SCRIPTS = ["signer.js", "webmssdk.js", "xbogus.js"];
-            LOAD_SCRIPTS.forEach(async (script) => {
-            await page.addScriptTag({
-                path: `${__dirname}/javascript/${script}`,
+        await page.goto(job.data.author,{waitUntil: 'networkidle2'})
+     
+        try {
+            // await page.waitForRequest(req=>{
+            //     return req.url().includes("https://www.tiktok.com/api/challenge/item_list")
+            // })
+            // await page.goto("https://www.tiktok.com",{  waitUntil: 'networkidle0'})
+    
+            // await page.focus("#app-header > div > div.e15qqn8h0 > div > form > input")
+            // await page.keyboard.type(job.data.hashtag.trim(),{delay: 100})
+            // await delay(1000)
+            // await page.keyboard.press('Enter')
+            // await delay(3000)
+            // console.log(job.data)
+           
+            let secUid = urlRes.split('&')[25].slice(7,1000000000000)
+            if(secUid=='width=1920'){
+                secUid = urlRes.split('&')[26].slice(7,1000000000000)
+            }
+
+            let LOAD_SCRIPTS = ["signer.js", "webmssdk.js", "xbogus.js"];
+                LOAD_SCRIPTS.forEach(async (script) => {
+                await page.addScriptTag({
+                    path: `${__dirname}/javascript/${script}`,
+                });
+                // console.log("[+] " + script + " loaded");
             });
-            // console.log("[+] " + script + " loaded");
-        });
-        await page.evaluate(() => {
-            window.generateSignature = function generateSignature(url) {
-                if (typeof window.byted_acrawler.sign !== "function") {
-                throw "No signature function found";
-                }
-                return window.byted_acrawler.sign({ url: url });
-            };
-            window.generateBogus = function generateBogus(params) {
-                if (typeof window.generateBogus !== "function") {
-                throw "No X-Bogus function found";
-                }
-                return window.generateBogus(params);
-            };
-            return this;
-        });
-        let conditionBreak = 0
-        let tiktok_id_video = job.data.urlVideo.slice(job.data.urlVideo.indexOf('video')+6,job.data.urlVideo.indexOf('video')+6+19)
-        for(let i=0;i<10000;i++){
-            let payload = {
-                aweme_id: tiktok_id_video,
-                cursor: i*20,
-                count: 20,
-                msToken: msToken,
-                aid: 1988,
-                app_language: "ja-JP",
-                app_name: "tiktok_web",
-                browser_language: "en-US",
-                browser_name: "Mozilla",
-                browser_online: true,
-                browser_platform: "Win32",
-                browser_version: "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-                channel: "tiktok_web",
-                cookie_enabled: true,
-                current_region: "JP",
-                device_id: "7242972052013434386",
-                device_platform: "web_pc",
-                from_page: "video",
-                os: "windows",
-                priority_region: "VN",
-                referer: '',
-                region: "VN",
-                screen_height: 1080,
-                screen_width: 1920,
-                webcast_language: "en",
-            }
-            const qsObject = new URLSearchParams(payload) ;
-            const qs = qsObject.toString();
-            let unsignUrl = `https://www.tiktok.com/api/comment/list/?${qs}`
-            let verify_fp = "verify_lj720og1_ONJPD8Y8_fmGX_4iwe_8rRB_UzTxV9tjNrKV";
-            let newUrl = unsignUrl + "&verifyFp=" + verify_fp;
-            
-            let token = await page.evaluate(()=>{
-                return generateSignature("${newUrl}")
+       
+            await page.evaluate(() => {
+                window.generateSignature = function generateSignature(url) {
+                    if (typeof window.byted_acrawler.sign !== "function") {
+                    throw "No signature function found";
+                    }
+                    return window.byted_acrawler.sign({ url: url });
+                };
+                window.generateBogus = function generateBogus(params) {
+                    if (typeof window.generateBogus !== "function") {
+                    throw "No X-Bogus function found";
+                    }
+                    return window.generateBogus(params);
+                };
+                return this;
             });
-            let signed_url = newUrl + "&_signature=" + token;
-            let userAgent = "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
-            let queryString = new URL(signed_url).searchParams.toString();
-            let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
-            signed_url += "&X-Bogus=" + bogus;
-            const res = await testApiReq({userAgent},signed_url,job.data.urlVideo)
-            const { data } = res;
-            try {
-                data.comments.map(async(x)=>{
-                    let insert = new schemacomment({"text":x.text,"cid":x.cid,"reply_comment_total":x.reply_comment_total,"vid":tiktok_id_video})
-                    await insert.save()
-                })
-            } catch (error) {
-                conditionBreak++
-                console.log(error)
-                await delay(5000)
-            }
-            if(conditionBreak>5){
-                break;
-            }
-        }    
+            let cursor = 0
+            await delay(3000)
+            for(let i=0;i<10000;i++){
+                console.log(secUid)
+                console.log(cursor)
+                console.log(urlRes.split('&'))
+                const PARAMS = {
+                    aid: "1988",
+                    count: 35,
+                    secUid: secUid,
+                    cursor: cursor,
+                    cookie_enabled: true,
+                    screen_width: 0,
+                    screen_height: 0,
+                    browser_language: "",
+                    browser_platform: "",
+                    browser_name: "",
+                    browser_version: "",
+                    browser_online: "",
+                    timezone_name: "Europe/London",
+                  };
+                    const qsObject = new URLSearchParams(PARAMS) ;
+                    const qs = qsObject.toString();
+                    let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.56"
+                    const unsignedUrl = `https://m.tiktok.com/api/post/item_list/?${qs}`;
+                    let verify_fp = generateVerifyFp();
+                    let newUrl = unsignedUrl + "&verifyFp=" + verify_fp;
+                    let token = await page.evaluate(`generateSignature("${newUrl}")`);
+                    let signed_url = newUrl + "&_signature=" + token;
+                    let queryString = new URL(signed_url).searchParams.toString();
+                    let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
+                    signed_url += "&X-Bogus=" + bogus;
+                    const xTtParams = await xttparams(queryString)
+                    const res = await testApiReq({ userAgent, xTtParams });
+                    const { data } = res;
+                    cursor = data.cursor
+                    console.log(data.hasMore)
+                    let conditionBreak = false
+                    if(data.itemList!=undefined){
+                        data.itemList.map(async(item)=>{
+                            if(item.createTime>dateTimeStamp){
+                                if(item.author!=undefined){
+                                    let insert = new schemacomment({author:job.data.author,"date":item.createTime,urlPost:`https://www.tiktok.com/@${item.author.uniqueId}/video/${item.id}`})
+                                    await insert.save()
+                                }
+                            }else{
+                                conditionBreak = true
+                            }      
+                        }
+                        )
+                    }
+                    if(data.hasMore==false||conditionBreak==true){
+                        break;
+                    }
+                    await delay(2000)
+                
+              
+            }  
+        } catch (error) {
+            // const a = await page.evaluate(()=>{
+            //     return document.querySelector("#main-content-challenge > div > main > div > .emuynwa1")?.textContent
+            // })
+            // if(a!="Couldn't find this hashtag"&&a!="No videos with this hashtag yet"){
+            //     queueComment.add({hashtag:`${job.data.hashtag}`})
+            //     console.log('add')
+            // }
+            // console.log({hashtag:`${job.data.hashtag}`})
+
+            console.log(error)
+
+        }
         try {
             await page.close()
-            await browser.close();
+            await browser.close()
         } catch (error) {
+            
         }
-        console.log('done')
-        done();   
+       
+        done();  
+         
+        } catch (error) {
+            console.log(error)
+        }
+      
     })
 }
-tiktokProfile()  
-async function testApiReq({ userAgent }, url,referer) {
+for(let i=0;i<1;i++){
+    tiktokProfile()  
+}
+
+
+async function xttparams(query_str) {
+    query_str += "&is_encryption=1";
+    const password = "webapp1.0+202106";
+    // Encrypt query string using aes-128-cbc
+    const cipher = createCipheriv("aes-128-cbc", password, password);
+    return Buffer.concat([cipher.update(query_str), cipher.final()]).toString(
+        "base64"
+    );
+}
+async function testApiReq({ userAgent, xTtParams }) {
     const options = {
-        timeout: 10000,
-        method: "GET",
-        headers: {
+      method: "GET",
+      timeout: 20000,
+
+      headers: {
         "user-agent": userAgent,
-        "referer": referer // !!! Referer is required
-        },
-        url: url,
+        "x-tt-params": xTtParams,
+      },
+      url: TT_REQ_PERM_URL,
     };
     return axios(options);
-}
+  }
+async function generateVerifyFp() {
+    var e = Date.now();
+    var t = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split(
+        ""
+        ),
+        e = t.length,
+        n = Date.now().toString(36),
+        r = [];
+    (r[8] = r[13] = r[18] = r[23] = "_"), (r[14] = "4");
+    for (var o = 0, i = void 0; o < 36; o++)
+        r[o] ||
+        ((i = 0 | (Math.random() * e)), (r[o] = t[19 == o ? (3 & i) | 8 : i]));
+    return "verify_" + n + "_" + r.join("");
+} 
