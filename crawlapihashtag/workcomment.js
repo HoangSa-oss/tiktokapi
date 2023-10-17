@@ -13,16 +13,23 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-02-01'
+const date = '2023-10-14'
 const dateTimeStamp = moment(date).format('X')
-const TT_REQ_PERM_URL =   "https://www.tiktok.com/api/challenge/item_list/?aid=1988&app_language=en&app_name=tiktok_web&battery_info=0.54&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=13187&channel=tiktok_web&cookie_enabled=true&count=30&cursor=30&device_id=7195820289077478917&device_platform=web_pc&focus_state=true&from_page=hashtag&history_len=5&is_fullscreen=false&is_page_visible=true&language=en&os=mac&priority_region=&referer=&region=RO&root_referer=https%3A%2F%2Fwww.tiktok.com%2F404%3FfromUrl%3D%2Fhashtag&screen_height=1120&screen_width=1792&tz_name=Europe%2FBucharest&verifyFp=verify_ldo6d7go_rfalj7WR_Cqtf_4z9G_Aj1J_WSrSUzWZSJ6U&webcast_language=en&msToken=8G5wMuMotboG4hiWsuvDxdQ-VbOZh29r-tMYpFzA56ODNmsk1_RL6xYfiJJvzznY8jK4h4m9CHR2QHJLayqE7lzKFm97L5pmXen7VCGVVIt9s6vU2nNnlmiZW-HTn10YT83WW__OMEaK42s=&X-Bogus=DFSzswVOe5bANjvTS4iHxr7TlqCW&_signature=_02B4Z6wo0000146bL2gAAIDAGk10ZlbQ1n-OmyvAAICC3d";
+const TT_REQ_PERM_URL_Array =  
+[
+    "https://www.tiktok.com/api/challenge/item_list/?aid=1988&app_language=en&app_name=tiktok_web&battery_info=0.54&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=13187&channel=tiktok_web&cookie_enabled=true&count=30&cursor=30&device_id=7195820289077478917&device_platform=web_pc&focus_state=true&from_page=hashtag&history_len=5&is_fullscreen=false&is_page_visible=true&language=en&os=mac&priority_region=&referer=&region=RO&root_referer=https%3A%2F%2Fwww.tiktok.com%2F404%3FfromUrl%3D%2Fhashtag&screen_height=1120&screen_width=1792&tz_name=Europe%2FBucharest&verifyFp=verify_ldo6d7go_rfalj7WR_Cqtf_4z9G_Aj1J_WSrSUzWZSJ6U&webcast_language=en&msToken=8G5wMuMotboG4hiWsuvDxdQ-VbOZh29r-tMYpFzA56ODNmsk1_RL6xYfiJJvzznY8jK4h4m9CHR2QHJLayqE7lzKFm97L5pmXen7VCGVVIt9s6vU2nNnlmiZW-HTn10YT83WW__OMEaK42s=&X-Bogus=DFSzswVOe5bANjvTS4iHxr7TlqCW&_signature=_02B4Z6wo0000146bL2gAAIDAGk10ZlbQ1n-OmyvAAICC3d",
+    "https://www.tiktok.com/api/challenge/item_list/?WebIdLastTime=1697447279&aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=13187&channel=tiktok_web&cookie_enabled=true&count=30&coverFormat=2&cursor=30&device_id=7290480495212250625&device_platform=web_pc&focus_state=false&from_page=hashtag&history_len=12&is_fullscreen=true&is_page_visible=true&language=en&os=mac&priority_region=VN&referer=https%3A%2F%2Fwww.tiktok.com%2Fvi-VN%2F&region=VN&root_referer=https%3A%2F%2Fwww.google.com%2F&screen_height=812&screen_width=375&tz_name=Asia%2FSaigon&verifyFp=verify_lnsob08n_QgJiSVSO_LMIX_4Tp0_8sgX_0XmZDbjVfftV&webcast_language=en&msToken=deFnpzMo3UGzTyEX_Vb05rnYQh3oODXl4GEfhQ8z6XnkKHtOUvAaK59yb1ZgaLFCwiexYlIfvuf3OQd4qG7fjrO_OZQCShY_wSHuT_0E-HIRNzprGcSUzAzhYVuRgAHplfCHYhBzxwD26xI=&X-Bogus=DFSzswVYKpbANeIItTqh/09WcBrn&_signature=_02B4Z6wo00001aDo6zwAAIDBoOjrPg.lZzmg6O-AAA0Y43",
+    "https://www.tiktok.com/api/challenge/item_list/?WebIdLastTime=1697450386&aid=1988&app_language=vi-VN&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=1365&channel=tiktok_web&cookie_enabled=true&count=30&coverFormat=2&cursor=60&device_id=7290493840091481602&device_platform=web_pc&focus_state=true&from_page=hashtag&history_len=4&is_fullscreen=true&is_page_visible=true&language=vi-VN&os=mac&priority_region=VN&referer=https%3A%2F%2Fwww.tiktok.com%2Fvi-VN%2F&region=VN&root_referer=https%3A%2F%2Fwww.google.com%2F&screen_height=812&screen_width=375&tz_name=Asia%2FSaigon&verifyFp=verify_lnsq5zjr_TLjG8Ed0_piTs_4dYN_9fc8_Qz1E1Mtds8lK&webcast_language=vi-VN&msToken=NgZJ9_07QwKzUuI4IP5Lp4C0le5inegIRcCgPuZ80ZZcu0MAoqPnhU13fYXeDr-_Ra7QHjqZUncvJMh4fVgSP9A8kAIUnTOx-3v-OIBkZsq8cZY4K9jje2GZB0buB8jRqNy_t9zh_jPlzW0=&X-Bogus=DFSzswVYTbzANeIItTq0bt9WcBnJ&_signature=_02B4Z6wo00001nHZrMgAAIDCcdmsyv3ayc5x2ahAAPlq6d",
+    "https://www.tiktok.com/api/challenge/item_list/?WebIdLastTime=1697450264&aid=1988&app_language=vi-VN&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=1614677337213958&channel=tiktok_web&cookie_enabled=true&count=30&coverFormat=2&cursor=30&device_id=7290493316226614786&device_platform=web_pc&focus_state=true&from_page=hashtag&history_len=4&is_fullscreen=true&is_page_visible=true&language=vi-VN&os=mac&priority_region=VN&referer=https%3A%2F%2Fwww.tiktok.com%2Fvi-VN%2F&region=VN&root_referer=https%3A%2F%2Fwww.google.com%2F&screen_height=812&screen_width=375&tz_name=Asia%2FSaigon&verifyFp=verify_lnsq2lmy_gWrfpn2q_Ge2v_4XpH_8B38_x6onFpRN67l0&webcast_language=vi-VN&msToken=CA9Jab5Ta1Hv3Qs7jlsyNXvSOasHLSfvJCl7NpLi_yXeC8SIAt7fkYMewEWmmrh2bbDmO8Dw9ymT9MKCczBasQ2qUqmohyGAPtRLBl-Vrlr2n2KXL40l8APwpGwqXDm40KRLJAQ0qwagaPg=&X-Bogus=DFSzswVYZFhANeIItTq0dz9WcBjC&_signature=_02B4Z6wo000016pWa1AAAIDDqlZrU3ZGUXuqVm.AAI.B8e",
+    "https://www.tiktok.com/api/challenge/item_list/?WebIdLastTime=1697450073&aid=1988&app_language=vi-VN&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=MacIntel&browser_version=5.0%20%28Macintosh%3B%20Intel%20Mac%20OS%20X%2010_15_7%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F109.0.0.0%20Safari%2F537.36&challengeID=1689680134204418&channel=tiktok_web&cookie_enabled=true&count=30&coverFormat=2&cursor=30&device_id=7290492496006071809&device_platform=web_pc&focus_state=true&from_page=hashtag&history_len=4&is_fullscreen=true&is_page_visible=true&language=vi-VN&os=mac&priority_region=VN&referer=https%3A%2F%2Fwww.tiktok.com%2Fvi-VN%2F&region=VN&root_referer=https%3A%2F%2Fwww.google.com%2F&screen_height=812&screen_width=375&tz_name=Asia%2FSaigon&verifyFp=verify_lnspzk23_PzHNwZFf_1mtc_4vQN_9adn_doT4MTGjZuzg&webcast_language=vi-VN&msToken=by7cjM1RvGkdBzBkpiR279T63BYsLerlUxF9NalF92dCOw3MmyUjXP5ykhM5UtEqkCPS_MhHNdEik5J-wXVelYTBOLqbJvX6ybTWxCDTL8MdppDLWl6ll4joyicJIg6bi9n_DARv_6WUhfg=&X-Bogus=DFSzswVYSWXANeIItTq8Pz9WcBJD&_signature=_02B4Z6wo00001RRIU8AAAIDBFEhTwj1JT6EUSFdAACBBe3"
+];
 
-const  tiktokProfile = async()=>{
+const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
     const queueComment = new Queue('queueHashtagCrawlApi','redis://127.0.0.1:6379')
-  
+    process.setMaxListeners(0);
     queueComment.process(1,async (job,done)=>{
         try {
-              await delay(4000)
+              await delay(i*1000)
         const browser = await puppeteer.launch({
             headless: false,
             // userDataDir: '/Users/hoangsa/Library/Application Support/Google/Chrome/Profile 3',
@@ -117,7 +124,7 @@ const  tiktokProfile = async()=>{
                     let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
                     signed_url += "&X-Bogus=" + bogus;
                     const xTtParams = await xttparams(queryString)
-                    const res = await testApiReq({ userAgent, xTtParams });
+                    const res = await testApiReq({ userAgent, xTtParams ,TT_REQ_PERM_URL});
                     const { data } = res;
                     console.log(data.hasMore)
                     if(data.itemList!=undefined){
@@ -161,16 +168,24 @@ const  tiktokProfile = async()=>{
             
         }
        
-        done();  
+   
          
         } catch (error) {
+            queueComment.add({hashtag:`${job.data.hashtag}`})
             console.log(error)
+            try {
+                await page.close()
+                await browser.close()
+            } catch (error) {
+                
+            }
         }
       
+        done();  
     })
 }
-for(let i=0;i<3;i++){
-    tiktokProfile()  
+for(let i=0;i<5;i++){
+    tiktokProfile(TT_REQ_PERM_URL_Array[i],i)  
 }
 
 
@@ -183,10 +198,10 @@ async function xttparams(query_str) {
         "base64"
     );
 }
-async function testApiReq({ userAgent, xTtParams }) {
+async function testApiReq({ userAgent, xTtParams,TT_REQ_PERM_URL }) {
     const options = {
       method: "GET",
-      timeout: 20000,
+      timeout: 50000,
 
       headers: {
         "user-agent": userAgent,
