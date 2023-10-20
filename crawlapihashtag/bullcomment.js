@@ -4,7 +4,7 @@ const queueComment = new Queue('queueHashtagCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
 
-   
+
     "#mgvietnam",
     "#HCMCFILMFESTIVAL",
     "#FilmFestival",
@@ -184,6 +184,7 @@ const urlVdideo = [
     "#ibmexvietnam",
     "#chikky",
     "#serumapi",
+
 ]
 
 for(let i=0;i<urlVdideo.length;i++){
