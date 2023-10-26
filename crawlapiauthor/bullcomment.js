@@ -3,6 +3,7 @@ import Queue from 'bull';
 const queueComment = new Queue('queueUserCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
+
     "https://www.tiktok.com/@o2o.bdsnews",
 "https://www.tiktok.com/@o2o.nhadep",
 "https://www.tiktok.com/@o2o.thocusin",

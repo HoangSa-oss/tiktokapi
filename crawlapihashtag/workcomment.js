@@ -13,7 +13,7 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-10-18'
+const date = '2023-08-01'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL_Array =  
 [
