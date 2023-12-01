@@ -13,7 +13,7 @@ import fs from 'fs/promises'
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-10-24'
+const date = '2023-11-27'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL =
   "https://www.tiktok.com/api/post/item_list/?aid=1988&app_language=en&app_name=tiktok_web&battery_info=1&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F107.0.0.0%20Safari%2F537.36%20Edg%2F107.0.1418.56&channel=tiktok_web&cookie_enabled=true&device_id=7165118680723998214&device_platform=web_pc&focus_state=true&from_page=user&history_len=3&is_fullscreen=false&is_page_visible=true&os=windows&priority_region=RO&referer=&region=RO&screen_height=1440&screen_width=2560&tz_name=Europe%2FBucharest&webcast_language=en&msToken=G3C-3f8JVeDj9OTvvxfaJ_NppXWzVflwP1dOclpUOmAv4WmejB8kFwndJufXBBrXbeWNqzJgL8iF5zn33da-ZlDihRoWRjh_TDSuAgqSGAu1-4u2YlvCATAM2jl2J1dwNPf0_fk9dx1gJxQ21S0=&X-Bogus=DFSzswVYxTUANS/JS8OTqsXyYJUo&_signature=_02B4Z6wo00001CoOkNwAAIDBCa--cQz5e0wqDpRAAGoE8f";
@@ -95,9 +95,7 @@ const  tiktokProfile = async()=>{
             let cursor = 0
             await delay(3000)
             for(let i=0;i<10000;i++){
-                console.log(secUid)
-                console.log(cursor)
-                console.log(urlRes.split('&'))
+          
                 const PARAMS = {
                     aid: "1988",
                     count: 35,
@@ -128,7 +126,7 @@ const  tiktokProfile = async()=>{
                     const res = await testApiReq({ userAgent, xTtParams });
                     const { data } = res;
                     cursor = data.cursor
-                    console.log(data.hasMore)
+                    console.log(data.itemList.length)
                     let conditionBreak = false
                     if(data.itemList!=undefined){
                         data.itemList.map(async(item)=>{
@@ -198,7 +196,7 @@ async function xttparams(query_str) {
 async function testApiReq({ userAgent, xTtParams }) {
     const options = {
       method: "GET",
-      timeout: 20000,
+      timeout: 50000,
 
       headers: {
         "user-agent": userAgent,

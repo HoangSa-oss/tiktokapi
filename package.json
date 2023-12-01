@@ -17,7 +17,9 @@
     "commenthtml": "babel-node crawlhtml/workcomment.js",
     "bullcommenthtml": "babel-node crawlhtml/bullcomment.js",
     "user": "babel-node crawlapiauthor/workcomment.js",
-    "bulluser": "babel-node crawlapiauthor/bullcomment.js"
+    "bulluser": "babel-node crawlapiauthor/bullcomment.js",
+    "bullhashtagcopy": "babel-node crawlapihashtagcopy/bullcomment.js",
+    "hashtagcopy": "babel-node crawlapihashtagcopy/workcomment.js"
   },
   "keywords": [],
   "author": "",

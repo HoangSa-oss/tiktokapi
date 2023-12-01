@@ -4,6 +4,8 @@ const queueComment = new Queue('queueUserCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
 
+
+    "https://www.tiktok.com/@uniqlovn?lang=vi-VN",
     "https://www.tiktok.com/@o2o.bdsnews",
 "https://www.tiktok.com/@o2o.nhadep",
 "https://www.tiktok.com/@o2o.thocusin",
@@ -174,6 +176,16 @@ const urlVdideo = [
 "https://www.tiktok.com/@tuanngocday",
 "https://www.tiktok.com/@adminkhaofficial",
 "https://www.tiktok.com/@damduc.review",
+"https://www.tiktok.com/@jppro.vn",
+"https://www.tiktok.com/@fxmillsvn",
+"https://www.tiktok.com/@tuktukthaibistro",
+"https://www.tiktok.com/@suadaunanhnumber1soya?fbclid=IwAR3EbigCYzrA74xY-1m6DLlZG2RxB9NVb42-MtF0qIdsNE1lRHvU_sy0Vcc",
+"https://www.tiktok.com/@nhathuocpharmacity",
+"https://www.tiktok.com/@haidilaovietnam",
+"https://www.tiktok.com/@fxmillsvn",
+
+"https://www.tiktok.com/@jppro.vn"
+
 ]
 for(let i=0;i<urlVdideo.length;i++){
     queueComment.add({author:`${urlVdideo[i]}`})
