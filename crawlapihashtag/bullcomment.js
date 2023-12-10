@@ -189,7 +189,8 @@ const urlVdideo = [
     "#ibmexvietnam",
     "#chikky",
     "#serumapi",
-
+    "#HumanActPrize",
+    "#RoadtoGalaHAP",
 ]
 
 for(let i=0;i<urlVdideo.length;i++){

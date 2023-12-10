@@ -17,6 +17,7 @@
     "commenthtml": "babel-node crawlhtml/workcomment.js",
     "bullcommenthtml": "babel-node crawlhtml/bullcomment.js",
     "user": "babel-node crawlapiauthor/workcomment.js",
+    "user1": "babel-node crawlapiauthor/workcomment1.js",
     "bulluser": "babel-node crawlapiauthor/bullcomment.js",
     "bullhashtagcopy": "babel-node crawlapihashtagcopy/bullcomment.js",
     "hashtagcopy": "babel-node crawlapihashtagcopy/workcomment.js"
@@ -47,7 +48,7 @@
     "mongoose": "^6.3.4",
     "nodemon": "^2.0.16",
     "playwright-chromium": "^1.37.1",
-    "puppeteer": "^14.4.1",
+    "puppeteer": "^21.6.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.1",
     "tiktok-signature": "^1.8.0"
