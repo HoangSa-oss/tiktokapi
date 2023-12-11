@@ -15,7 +15,7 @@ import cookie from './cookiedefault.json' assert { type: 'json' }
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-11-01'
+const date = '2023-12-08'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL =
 "https://www.tiktok.com/api/post/item_list/?aid=1988&app_language=en&app_name=tiktok_web&battery_info=1&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F107.0.0.0%20Safari%2F537.36%20Edg%2F107.0.1418.56&channel=tiktok_web&cookie_enabled=true&device_id=7165118680723998214&device_platform=web_pc&focus_state=true&from_page=user&history_len=3&is_fullscreen=false&is_page_visible=true&os=windows&priority_region=RO&referer=&region=RO&screen_height=1440&screen_width=2560&tz_name=Europe%2FBucharest&webcast_language=en&msToken=G3C-3f8JVeDj9OTvvxfaJ_NppXWzVflwP1dOclpUOmAv4WmejB8kFwndJufXBBrXbeWNqzJgL8iF5zn33da-ZlDihRoWRjh_TDSuAgqSGAu1-4u2YlvCATAM2jl2J1dwNPf0_fk9dx1gJxQ21S0=&X-Bogus=DFSzswVYxTUANS/JS8OTqsXyYJUo&_signature=_02B4Z6wo00001CoOkNwAAIDBCa--cQz5e0wqDpRAAGoE8f";
@@ -113,7 +113,7 @@ const  tiktokProfile = async()=>{
                     cookie_enabled: "true",
                     count: 35,
                     coverFormat: 2,
-                    cursor: 0,
+                    cursor: cursor,
                     device_id: 7310227331375826434,
                     device_platform: "web_pc",
                     focus_state: true,
@@ -146,9 +146,21 @@ const  tiktokProfile = async()=>{
                     let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
                     signed_url += "&X-Bogus=" + bogus;
                     const page1 = await browser.newPage({});
-                    await page1.goto(signed_url, { waitUntil: "networkidle0" })
-                    const text = await page1.$eval("body > pre", (el) => el.textContent);
-                    const data = JSON.parse(text)
+                    for(let i =0;i<10;i++){
+                        await delay(4000)
+                        try {
+                            await page1.goto(signed_url, { waitUntil: "networkidle0" })
+                            const text = await page1.evaluate(()=>{
+                                return document.querySelector("body > pre")?.textContent
+                            });
+                            var data = JSON.parse(text)
+                            if(data.itemList!=undefined){
+                                break;
+                            }
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }
                     cursor = data.cursor
                     console.log(data.itemList.length)
                     let conditionBreak = false
@@ -193,8 +205,8 @@ const  tiktokProfile = async()=>{
 
         }
         try {
-            // await page.close()
-            // await browser.close()
+            await page.close()
+            await browser.close()
         } catch (error) {
             
         }
