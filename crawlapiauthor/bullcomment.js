@@ -3,14 +3,7 @@ import Queue from 'bull';
 const queueComment = new Queue('queueUserCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
-    "https://www.tiktok.com/@mutex_official",
-    "https://www.tiktok.com/@thanhthattha0312",
-    "https://www.tiktok.com/@tonyphungrv",
-    "https://www.tiktok.com/@vatvostudio",
-    "https://www.tiktok.com/@bdvn.vietnampost",
-    "https://www.tiktok.com/@seriinreview",
-    "https://www.tiktok.com/@jntexpressvn",
-    "https://www.tiktok.com/@alphatradinghubvn?lang=vi-VN"
+
 //     "https://www.tiktok.com/@namlonggroup_nl",
 //     "https://www.tiktok.com/@hoangmaichung.com",
 //     "https://www.tiktok.com/@baoxaydung.com.vn",
