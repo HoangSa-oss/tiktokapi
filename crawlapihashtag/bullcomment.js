@@ -3,7 +3,7 @@ import Queue from 'bull';
 const queueComment = new Queue('queueHashtagCrawlApi','redis://127.0.0.1:6379')
 
 const urlVdideo = [
-  
+
     "#BigSea_Land" ,
     "#BigSea_Group",
     "#BigSeaLand" ,

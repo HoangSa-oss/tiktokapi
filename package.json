@@ -48,7 +48,7 @@
     "mongoose": "^6.3.4",
     "nodemon": "^2.0.16",
     "playwright-chromium": "^1.37.1",
-    "puppeteer": "^21.6.0",
+    "puppeteer": "^21.7.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.1",
     "tiktok-signature": "^1.8.0"

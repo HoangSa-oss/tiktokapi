@@ -13,7 +13,7 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-12-19'
+const date = '2024-01-07'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL_Array =  
 [
@@ -133,7 +133,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
             }  
         } catch (error) {
        
-            if(error.message=="TimeoutError: Navigation timeout of 30000 ms exceeded"){
+            if(error.message=="Navigation timeout of 30000 ms exceeded"){
                 queueComment.add({hashtag:`${job.data.hashtag}`})
                 console.log('add')
             }
@@ -151,7 +151,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
         done();  
     })
 }
-for(let i=1;i<4;i++){
+for(let i=1;i<3;i++){
     tiktokProfile(TT_REQ_PERM_URL_Array[i],i)  
 }
 

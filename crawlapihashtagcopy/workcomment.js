@@ -13,7 +13,7 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2023-12-16'
+const date = '2024-01-01'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL_Array =  
 [
@@ -27,8 +27,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
     const queueComment = new Queue('queueHashtagCrawlApiCopy','redis://127.0.0.1:6379')
     process.setMaxListeners(0);
     queueComment.process(1,async (job,done)=>{
-        try {
-              await delay(i*1000)
+        await delay(i*1000)
         const browser = await puppeteer.launch({
             headless: false,
             // userDataDir: '/Users/hoangsa/Library/Application Support/Google/Chrome/Profile 3',
@@ -47,6 +46,8 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
         });
         await delay(1000)
         const page = await browser.newPage({});
+        try {
+              
         let urlRes = ''
         page.on('request',(req)=>{
             if(req.url().includes("https://www.tiktok.com/api/challenge/item_list")){
@@ -56,19 +57,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
         await page.setBypassCSP(true)
         await page.goto(`https://www.tiktok.com/tag/${job.data.hashtag.slice(1,2000)}`,{      waitUntil: 'networkidle2'})
      
-        try {
-            // await page.waitForRequest(req=>{
-            //     return req.url().includes("https://www.tiktok.com/api/challenge/item_list")
-            // })
-            // await page.goto("https://www.tiktok.com",{  waitUntil: 'networkidle0'})
-    
-            // await page.focus("#app-header > div > div.e15qqn8h0 > div > form > input")
-            // await page.keyboard.type(job.data.hashtag.trim(),{delay: 100})
-            // await delay(1000)
-            // await page.keyboard.press('Enter')
-            // await delay(3000)
-            // console.log(job.data)
-           
+         
             const challengeID = urlRes.split('&')[9].slice(12,1000000000000)
             let LOAD_SCRIPTS = ["signer.js", "webmssdk.js", "xbogus.js"];
                 LOAD_SCRIPTS.forEach(async (script) => {
@@ -137,27 +126,19 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
                             }       
                         })
                     }
-                    
-                   
-                  
                     if(data.hasMore==false){
                         break;
                     }
                     await delay(3000)
-                
-              
             }  
         } catch (error) {
-            const a = await page.evaluate(()=>{
-                return document.querySelector("#main-content-challenge > div > main > div > .emuynwa1")?.textContent
-            })
-            if(a!="Couldn't find this hashtag"&&a!="No videos with this hashtag yet"){
+       
+            if(error.message=="Navigation timeout of 30000 ms exceeded"){
                 queueComment.add({hashtag:`${job.data.hashtag}`})
                 console.log('add')
             }
-            console.log({hashtag:`${job.data.hashtag}`})
-
-            console.log(error)
+         
+            console.log(error.message)
 
         }
         try {
@@ -167,19 +148,6 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
             
         }
        
-   
-         
-        } catch (error) {
-            queueComment.add({hashtag:`${job.data.hashtag}`})
-            console.log(error)
-            try {
-                await page.close()
-                await browser.close()
-            } catch (error) {
-                
-            }
-        }
-      
         done();  
     })
 }

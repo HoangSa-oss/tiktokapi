@@ -3,9 +3,11 @@ import Queue from 'bull';
 const queueComment = new Queue('queueHashtagCrawlApiCopy','redis://127.0.0.1:6379')
 
 const urlVdideo = [
-  "#VinamilkGreenfarm",
-  "#greenfarm ",
-  "#chudumienvigiac",
+  "#thaicongshop",
+  "#thaicong",
+
+  "#thaicongtiktokshop",
+  
 ]
 for(let i=0;i<urlVdideo.length;i++){
     queueComment.add({hashtag:`${urlVdideo[i]}`})
