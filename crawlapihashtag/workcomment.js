@@ -13,7 +13,7 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2024-01-07'
+const date = '2024-03-10'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL_Array =  
 [
@@ -56,7 +56,6 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
         })
         await page.setBypassCSP(true)
         await page.goto(`https://www.tiktok.com/tag/${job.data.hashtag.slice(1,2000)}`,{      waitUntil: 'networkidle2'})
-     
          
             const challengeID = urlRes.split('&')[9].slice(12,1000000000000)
             let LOAD_SCRIPTS = ["signer.js", "webmssdk.js", "xbogus.js"];
@@ -112,8 +111,22 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
                     let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
                     signed_url += "&X-Bogus=" + bogus;
                     const xTtParams = await xttparams(queryString)
-                    const res = await testApiReq({ userAgent, xTtParams ,TT_REQ_PERM_URL});
-                    const { data } = res;
+                    for(let i=0;i<10;i++){
+           
+                        try {
+                            var res = await testApiReq({ userAgent, xTtParams ,TT_REQ_PERM_URL});
+                            var { data } = res;
+                            if(data.itemList!=undefined){
+                                break;
+                            }
+                        } catch (error) {
+                            await delay(4000)
+                            console.log("loi for:  "+error.message)
+                        }
+                      
+                      
+                    
+                    }      
                     console.log(data.hasMore)
                     if(data.itemList!=undefined){
                         data.itemList.map(async(item)=>{
@@ -129,11 +142,11 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
                     if(data.hasMore==false){
                         break;
                     }
-                    await delay(3000)
+                    await delay(2000)
             }  
         } catch (error) {
        
-            if(error.message=="Navigation timeout of 30000 ms exceeded"){
+            if(error.message!="Cannot read properties of undefined (reading 'slice')"){
                 queueComment.add({hashtag:`${job.data.hashtag}`})
                 console.log('add')
             }

@@ -13,7 +13,7 @@ import moment from 'moment';
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2024-01-01'
+const date = '2024-01-15'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL_Array =  
 [
@@ -133,7 +133,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
             }  
         } catch (error) {
        
-            if(error.message=="Navigation timeout of 30000 ms exceeded"){
+            if(error.message=="Navigation timeout of 30000 ms exceeded"||error.message=="connect ECONNREFUSED 23.210.250.113:443"){
                 queueComment.add({hashtag:`${job.data.hashtag}`})
                 console.log('add')
             }
@@ -148,7 +148,7 @@ const  tiktokProfile = async(TT_REQ_PERM_URL,i)=>{
             
         }
        
-        done();  
+        // done();  
     })
 }
 for(let i=1;i<4;i++){

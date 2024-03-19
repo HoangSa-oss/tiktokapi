@@ -15,7 +15,7 @@ import cookie from './cookiedefault.json' assert { type: 'json' }
 puppeteer.use(StealthPlugin());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const date = '2024-01-07'
+const date = '2024-03-15'
 const dateTimeStamp = moment(date).format('X')
 const TT_REQ_PERM_URL =
 "https://www.tiktok.com/api/post/item_list/?WebIdLastTime=1694080746&aid=1988&app_language=en&app_name=tiktok_web&browser_language=en-US&browser_name=Mozilla&browser_online=true&browser_platform=Win32&browser_version=5.0%20%28Windows%20NT%2010.0%3B%20Win64%3B%20x64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F120.0.0.0%20Safari%2F537.36%22&channel=tiktok_web&cookie_enabled=true&count=35&coverFormat=2&cursor=0&device_id=7276021344730334727&device_platform=web_pc&focus_state=true&from_page=user&history_len=2&is_fullscreen=false&is_page_visible=true&language=en&os=windows&priority_region=&referer=&region=VN&screen_height=1080&screen_width=1920&secUid=MS4wLjABAAAAPvTTzV9HF_QEH73vS5A61yx2CYGtiYkhQWlVkVelt5fr029jQVgMF_jYdOHdxo-p&tz_name=Asia%2FBangkok&verifyFp=verify_lm8zy1iy_x0Y0i89Y_01k7_4q5z_8WAT_GV80tpVMQzCh&webcast_language=en&msToken=&X-Bogus=DFSzswVO8ghANCdTt78vTt9WcBJp&_signature=_02B4Z6wo00001Bub5zwAAIDAG5vnP92oXAQbm-OAAGN31c";
@@ -36,17 +36,18 @@ const  tiktokProfile = async()=>{
                 '--disable-web-security',
                 '--disable-features=IsolateOrigins,site-per-process',
                 '--shm-size=8gb', // this solves the issue
-                '--user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"'
+                '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
                 ],
                 ignoreHTTPSErrors: true,
                 executablePath:executablePath(),  
         });
         await delay(1000)
         const page = await browser.newPage({});
+        const page1 = await browser.newPage({});
         try {
               
         let cookieArray = cookie[1]
-        await page.setCookie(...cookieArray[1])
+        // await page.setCookie(...cookieArray[1])
         let urlRes = ''
         page.on('request',(req)=>{
             if(req.url().includes("https://www.tiktok.com/api/user/detail")){
@@ -119,12 +120,11 @@ const  tiktokProfile = async()=>{
                 secUid: secUid.trim(),
                 tz_name: "Asia/Bangkok",
                 webcast_language: "en",
-                msToken: "q23uur02mI5G_8cjMFdIJHjOAUWliStPlMEDELZxHRueFJfkZzE04VtdIM3xQDXLrk_Mk6p2EtcGJyR1_boaVPdDYzW0Q4yitxDfOkVnkJb2s67BLD3g0k9DpU2vz4iB0FjJ6w==",
                 };
                 const qsObject = new URLSearchParams(PARAMS) ;
                 const qs = qsObject.toString();
                 let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                const unsignedUrl = `https://m.tiktok.com/api/post/item_list/?${qs}`;
+                const unsignedUrl = `https://www.tiktok.com/api/post/item_list/?${qs}`;
                 let verify_fp = await generateVerifyFp();
                 let newUrl = unsignedUrl + "&verifyFp=" + verify_fp;
                 let token = await page.evaluate(`generateSignature("${newUrl}")`);
@@ -133,22 +133,30 @@ const  tiktokProfile = async()=>{
                 let bogus = await page.evaluate(`generateBogus("${queryString}","${userAgent}")`);
                 signed_url += "&X-Bogus=" + bogus;
                 const xTtParams = await xttparams(queryString)
-               
+
                 for(let i=0;i<10;i++){
-                    await delay(4000)
-                    const res = await testApiReq({ userAgent, signed_url });
-                    var { data } = res;
-                   
-                    if(data.itemList!=undefined){
-                        break
+                    try {
+                        await page1.goto(signed_url, { waitUntil: "networkidle0" })
+                        const text = await page1.evaluate(()=>{
+                            return document.querySelector("body > pre")?.textContent
+                        });
+                        var data = JSON.parse(text)
+                        if(data.itemList!=undefined){
+                            break;
+                        }
+                    } catch (error) {
+                        console.log('loifor'+error.message)
+                        await delay(4000)
                     }
+                       
+                
                 }      
                 const privateAccount =  await page.evaluate(()=>{
                     return document.querySelector('p.css-1ovqurc-PTitle.emuynwa1')?.textContent
                 })  
 
                 cursor = data.cursor
-                if(cursor==0||privateAccount!=undefined){
+                if(cursor==0||(privateAccount!=undefined&&privateAccount!='Something went wrong')){
                     throw new Error("No Content")
                 }
                 console.log(data.itemList.length)
@@ -186,14 +194,15 @@ const  tiktokProfile = async()=>{
         }
         try {
             await page.close()
+            await page1.close()
             await browser.close()
         } catch (error) {
-            
+            console.log(error)
         }
         done();  
     })
 }
-for(let i=0;i<1;i++){
+for(let i=0;i<4;i++){
     tiktokProfile()  
 }
 

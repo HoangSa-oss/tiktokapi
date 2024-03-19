@@ -1,9 +1,9 @@
 import Queue from 'bull';
 
-const queueComment = new Queue('queueHashtagCrawlApi','redis://127.0.0.1:6379')
+const queueComment = new Queue('queueAccount','redis://127.0.0.1:6379')
 
 const urlVdideo = [
-  '#chuyentienzalopay'
+  'chăm sóc sức khỏe'
   // "#VinaCapital",
   // "#VCFM",
   // "#abetterlifeathome",
@@ -55,8 +55,8 @@ const urlVdideo = [
 ]
 
 for(let i=0;i<urlVdideo.length;i++){
-    queueComment.add({hashtag:`${urlVdideo[i]}`})
-    console.log({hashtag:`${urlVdideo[i]}`})
+    queueComment.add({keyword:`${urlVdideo[i]}`})
+    console.log({keyword:`${urlVdideo[i]}`})
 }
 
 // await queueComment.obliterate({ force: true });

@@ -20,7 +20,10 @@
     "user1": "babel-node crawlapiauthor/workcomment1.js",
     "bulluser": "babel-node crawlapiauthor/bullcomment.js",
     "bullhashtagcopy": "babel-node crawlapihashtagcopy/bullcomment.js",
-    "hashtagcopy": "babel-node crawlapihashtagcopy/workcomment.js"
+    "hashtagcopy": "babel-node crawlapihashtagcopy/workcomment.js",
+    "account": "babel-node crawlaccountkeyword/workcomment.js",
+    "bullaccount": "babel-node crawlaccountkeyword/bullcomment.js"
+
   },
   "keywords": [],
   "author": "",
